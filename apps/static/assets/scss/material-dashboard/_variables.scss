@@ -26,7 +26,7 @@ $black:    #000 !default;
 
 $blue:    #63B3ED !default;
 $indigo:  #596CFF !default;
-$purple:  #6f42c1 !default;
+$green:  #6f42c1 !default;
 $pink:    #d63384 !default;
 $red:     #F56565 !default;
 $rose:    #e91e63 !default;
@@ -40,7 +40,7 @@ $cyan:    #0dcaf0 !default;
 $colors: (
   "blue":       $blue,
   "indigo":     $indigo,
-  "purple":     $purple,
+  "green":     $green,
   "pink":       $pink,
   "red":        $red,
   "orange":     $orange,
@@ -150,15 +150,15 @@ $indigo-700: shade-color($indigo, 4) !default;
 $indigo-800: shade-color($indigo, 6) !default;
 $indigo-900: shade-color($indigo, 8) !default;
 
-$purple-100: tint-color($purple, 8) !default;
-$purple-200: tint-color($purple, 6) !default;
-$purple-300: tint-color($purple, 4) !default;
-$purple-400: tint-color($purple, 2) !default;
-$purple-500: $purple !default;
-$purple-600: shade-color($purple, 2) !default;
-$purple-700: shade-color($purple, 4) !default;
-$purple-800: shade-color($purple, 6) !default;
-$purple-900: shade-color($purple, 8) !default;
+$green-100: tint-color($green, 8) !default;
+$green-200: tint-color($green, 6) !default;
+$green-300: tint-color($green, 4) !default;
+$green-400: tint-color($green, 2) !default;
+$green-500: $green !default;
+$green-600: shade-color($green, 2) !default;
+$green-700: shade-color($green, 4) !default;
+$green-800: shade-color($green, 6) !default;
+$green-900: shade-color($green, 8) !default;
 
 $pink-100: tint-color($pink, 8) !default;
 $pink-200: tint-color($pink, 6) !default;
