@@ -1,16 +1,15 @@
-# -*- encoding: utf-8 -*-
-"""
-Copyright (c) 2024 - present Dickson & Fredy.us
-"""
-
 from apps.home import blueprint
 from flask import render_template, request
 from flask_login import login_required
 from jinja2 import TemplateNotFound
-import psycopg2
-from psycopg2.extras import RealDictCursor
+import requests
+import json
 
-@blueprint.route('/index')
+# Define the API endpoint and key
+API_ENDPOINT = "https://monitoring-system-va17.onrender.com/api/disease_data"
+API_KEY = "rnd_cfn28WFvfPJhRZwtj5WrStCCP8D8"
+
+@blueprint.route('/index')  
 @login_required
 def index():
     return render_template('home/index.html', segment='index')
@@ -18,44 +17,31 @@ def index():
 @blueprint.route('/notifications')
 @login_required
 def notifications():
-    # Database connection parameters
-    DB_ENGINE = 'postgresql'
-    DB_USERNAME = 'pest_db_user'
-    DB_PASS = 'ic2ssRtlfJNayDEtbKkMhrvi6l4IyNJ8'
-    DB_HOST = 'dpg-cqjkj2mehbks73cd0r30-a.oregon-postgres.render.com'
-    DB_PORT = '5432'
-    DB_NAME = 'pest_db'
-
-    conn = None
-    alerts = []
-
+    headers = {
+        'Authorization': f'Bearer {API_KEY}',
+        'Content-Type': 'application/json'
+    }
+    
     try:
-        # Connect to the PostgreSQL database
-        conn = psycopg2.connect(
-            dbname=DB_NAME,
-            user=DB_USERNAME,
-            password=DB_PASS,
-            host=DB_HOST,
-            port=DB_PORT
-        )
-
-        # Create a cursor to execute queries
-        cursor = conn.cursor(cursor_factory=RealDictCursor)
-
-        # Fetch disease data from the database
-        cursor.execute("SELECT disease, recommendation, image_path FROM disease_data ORDER BY detection_date DESC")
-        disease_data = cursor.fetchall()
-
+        # Fetch disease data from the API
+        response = requests.get(API_ENDPOINT, headers=headers)
+        response.raise_for_status()  # Raise an exception for HTTP errors
+        disease_data = response.json()
+        
         # Create alerts list to pass to the template
-        alerts = [{'disease': row['disease'], 'recommendation': row['recommendation'], 'image_path': row['image_path'], 'type': 'danger'} for row in disease_data]
-
-    except Exception as e:
+        alerts = [
+            {
+                'disease': entry['disease'],
+                'recommendation': entry['recommendation'],
+                'image_path': entry['image_path'],
+                'type': 'danger'
+            }
+            for entry in disease_data
+        ]
+    
+    except requests.RequestException as e:
         print(f"Error fetching data: {e}")
-
-    finally:
-        if conn:
-            cursor.close()
-            conn.close()
+        alerts = []
 
     return render_template('home/notifications.html', alerts=alerts)
 
