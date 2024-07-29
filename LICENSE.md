@@ -1,6 +1,6 @@
 # MIT License
 
-Copyright (c) 2019 - present [Dickson & Fredy](http://Dickson & Fredy.us/)
+Copyright (c) 2024 - present [Dickson & Fredy](http://Dickson & Fredy.us/)
 
 <br />
 
