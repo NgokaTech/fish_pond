@@ -13,16 +13,17 @@ DB_CONFIG = {
     'port': '5432'
 }
 
-@blueprint.route('/index')  
+@blueprint.route('/index', methods=['GET'])
 @login_required
 def index():
     return render_template('home/index.html', segment='index')
 
-@blueprint.route('/notifications')
+@blueprint.route('/notifications', methods=['GET'])
 @login_required
 def notifications():
     alerts = []
     try:
+        # Establish database connection
         conn = psycopg2.connect(**DB_CONFIG)
         cur = conn.cursor()
         
@@ -35,10 +36,6 @@ def notifications():
         else:
             print(f"Data fetched: {rows}")
         
-        # Close connection
-        cur.close()
-        conn.close()
-        
         # Create alerts list to pass to the template
         alerts = [
             {
@@ -49,14 +46,17 @@ def notifications():
             }
             for row in rows
         ]
+        
+        # Close the cursor and connection
+        cur.close()
+        conn.close()
 
     except Exception as e:
         print(f"Error fetching data: {e}")
-        alerts = []
 
     return render_template('home/notifications.html', alerts=alerts)
 
-@blueprint.route('/<template>')
+@blueprint.route('/<template>', methods=['GET'])
 @login_required
 def route_template(template):
     try:
@@ -80,11 +80,8 @@ def route_template(template):
 def get_segment(request):
     try:
         segment = request.path.split('/')[-1]
-
         if segment == '':
             segment = 'index'
-
         return segment
-
     except:
         return None
