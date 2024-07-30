@@ -19,7 +19,10 @@ def register_extensions(app):
 def register_blueprints(app):
     for module_name in ('authentication', 'home'):
         module = import_module('apps.{}.routes'.format(module_name))
-        app.register_blueprint(module.blueprint)
+        if hasattr(module, 'blueprint'):
+            app.register_blueprint(module.blueprint)
+        else:
+            print(f'Error: {module_name}.routes does not have a blueprint attribute.')
 
 def configure_database(app):
     @app.before_request
@@ -38,11 +41,10 @@ def configure_database(app):
     def shutdown_session(exception=None):
         db.session.remove()
 
-
 def create_app(config):
     app = Flask(__name__)
     app.config.from_object(config)
     register_extensions(app)
     register_blueprints(app)
-    configure_database(app)  # Call the configure_database function here
+    configure_database(app)
     return app

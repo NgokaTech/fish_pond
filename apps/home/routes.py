@@ -1,62 +1,44 @@
-from apps.home import blueprint
 from flask import render_template, request
 from flask_login import login_required
-from jinja2 import TemplateNotFound
+from . import blueprint  # Import the blueprint from __init__.py
 import psycopg2
+from jinja2 import TemplateNotFound
 
-# Define your database connection details
-DB_CONFIG = {
-    'dbname': 'pest_db',
-    'user': 'pest_db_user',
-    'password': 'ic2ssRtlfJNayDEtbKkMhrvi6l4IyNJ8',
-    'host': 'dpg-cqjkj2mehbks73cd0r30-a.oregon-postgres.render.com',
-    'port': '5432'
-}
-
-@blueprint.route('/index', methods=['GET'])
+@blueprint.route('/index')
 @login_required
 def index():
     return render_template('home/index.html', segment='index')
 
-@blueprint.route('/notifications', methods=['GET'])
+@blueprint.route('/notifications')
 @login_required
 def notifications():
     alerts = []
     try:
-        # Establish database connection
-        conn = psycopg2.connect(**DB_CONFIG)
+        conn = psycopg2.connect(
+            dbname='pest_db',
+            user='pest_db_user',
+            password='ic2ssRtlfJNayDEtbKkMhrvi6l4IyNJ8',
+            host='dpg-cqjkj2mehbks73cd0r30-a.oregon-postgres.render.com',
+            port='5432'
+        )
         cur = conn.cursor()
-        
-        # Fetch disease data from the database
         cur.execute("SELECT disease, recommendation, image_path FROM disease_data ORDER BY detection_date DESC")
         rows = cur.fetchall()
-        
-        if not rows:
-            print("No data found.")
-        else:
-            print(f"Data fetched: {rows}")
-        
-        # Create alerts list to pass to the template
+        cur.close()
+        conn.close()
+
         alerts = [
             {
                 'disease': row[0],
                 'recommendation': row[1],
                 'image_path': row[2],
-                'type': 'danger'  # or use 'info', 'warning', etc., based on your needs
+                'type': 'danger'
             }
             for row in rows
         ]
-        
-        # Close the cursor and connection
-        cur.close()
-        conn.close()
-
-    except psycopg2.Error as e:
-        # Handle database errors
-        print(f"Database error: {e}")
     except Exception as e:
-        # Handle general errors
         print(f"Error fetching data: {e}")
+        alerts = []
 
     return render_template('home/notifications.html', alerts=alerts)
 
