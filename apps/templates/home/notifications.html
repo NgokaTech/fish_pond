@@ -1,8 +1,8 @@
 {% extends "layouts/base.html" %}
 
-{% block title %} Notifications {% endblock %} 
+{% block title %} Notifications {% endblock %}
 
-<!-- Specific Page CSS goes HERE  -->
+<!-- Specific Page CSS goes HERE -->
 {% block stylesheets %}{% endblock stylesheets %}
 
 {% block content %}
@@ -14,15 +14,26 @@
                     <h4 class="card-title">Notifications</h4>
                 </div>
                 <div class="card-body">
-                    {% for alert in alerts %}
-                    <div class="alert alert-{{ alert.type }} alert-dismissible text-white" role="alert">
-                        <span class="text-sm"><strong>Detected:</strong> {{ alert.disease }}. <strong>Treatment:</strong> {{ alert.recommendation }}</span>
-                        <img src="{{ url_for('static', filename='uploads/' ~ alert.image_path) }}" alt="Captured Image" class="img-fluid mt-2">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    {% endfor %}
+                    {% if alerts %}
+                        {% for alert in alerts %}
+                        <div class="alert alert-{{ alert.type }} alert-dismissible fade show" role="alert">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>Detected:</strong> {{ alert.disease }}. 
+                                    <strong>Treatment:</strong> {{ alert.recommendation }}
+                                </div>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <img src="{{ url_for('static', filename='uploads/' ~ alert.image_path) }}" alt="Captured Image" class="img-fluid mt-2">
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="alert alert-info" role="alert">
+                            No notifications available at the moment.
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -30,5 +41,5 @@
 </div>
 {% endblock content %}
 
-<!-- Specific Page JS goes HERE  -->
+<!-- Specific Page JS goes HERE -->
 {% block javascripts %}{% endblock javascripts %}

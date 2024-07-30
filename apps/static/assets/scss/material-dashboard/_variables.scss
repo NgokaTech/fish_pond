@@ -27,7 +27,7 @@ $black:    #000 !default;
 $blue:    #63B3ED !default;
 $indigo:  #596CFF !default;
 $green:  #6f42c1 !default;
-$pink:    #d63384 !default;
+$pink:    #212529 !default;
 $red:     #F56565 !default;
 $rose:    #e91e63 !default;
 $orange:  #fd7e14 !default;
@@ -1086,7 +1086,7 @@ $form-feedback-margin-top:          $form-text-margin-top !default;
 $form-feedback-font-size:           $form-text-font-size !default;
 $form-feedback-font-style:          $form-text-font-style !default;
 $form-feedback-valid-color:         #66d432 !default;
-$form-feedback-invalid-color:       #fd5c70 !default;
+$form-feedback-invalid-color:       6c757d !default;
 
 $form-feedback-icon-valid-color:    $form-feedback-valid-color !default;
 $form-feedback-icon-valid:          url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 8'><path fill='#{$form-feedback-icon-valid-color}' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/></svg>") !default;
