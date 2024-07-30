@@ -21,14 +21,19 @@ def index():
 @blueprint.route('/notifications')
 @login_required
 def notifications():
+    alerts = []
     try:
-        # Connect to the database
         conn = psycopg2.connect(**DB_CONFIG)
         cur = conn.cursor()
         
         # Fetch disease data from the database
         cur.execute("SELECT disease, recommendation, image_path FROM disease_data ORDER BY detection_date DESC")
         rows = cur.fetchall()
+        
+        if not rows:
+            print("No data found.")
+        else:
+            print(f"Data fetched: {rows}")
         
         # Close connection
         cur.close()
@@ -44,7 +49,7 @@ def notifications():
             }
             for row in rows
         ]
-    
+
     except Exception as e:
         print(f"Error fetching data: {e}")
         alerts = []
@@ -67,7 +72,8 @@ def route_template(template):
     except TemplateNotFound:
         return render_template('home/page-404.html'), 404
 
-    except:
+    except Exception as e:
+        print(f"Error loading template: {e}")
         return render_template('home/page-500.html'), 500
 
 # Helper - Extract current page name from request

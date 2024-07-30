@@ -26,7 +26,11 @@
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
+                            {% if alert.image_path %}
                             <img src="{{ url_for('static', filename='uploads/' ~ alert.image_path) }}" alt="Captured Image" class="img-fluid mt-2">
+                            {% else %}
+                            <p>No image available for this alert.</p>
+                            {% endif %}
                         </div>
                         {% endfor %}
                     {% else %}
