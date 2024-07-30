@@ -42,7 +42,7 @@ def notifications():
                 'disease': row[0],
                 'recommendation': row[1],
                 'image_path': row[2],
-                'type': 'danger'
+                'type': 'danger'  # or use 'info', 'warning', etc., based on your needs
             }
             for row in rows
         ]
@@ -51,7 +51,11 @@ def notifications():
         cur.close()
         conn.close()
 
+    except psycopg2.Error as e:
+        # Handle database errors
+        print(f"Database error: {e}")
     except Exception as e:
+        # Handle general errors
         print(f"Error fetching data: {e}")
 
     return render_template('home/notifications.html', alerts=alerts)
@@ -83,5 +87,6 @@ def get_segment(request):
         if segment == '':
             segment = 'index'
         return segment
-    except:
+    except Exception as e:
+        print(f"Error extracting segment: {e}")
         return None
