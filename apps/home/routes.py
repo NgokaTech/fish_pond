@@ -2,13 +2,16 @@ from apps.home import blueprint
 from flask import render_template, request
 from flask_login import login_required
 from jinja2 import TemplateNotFound
-import requests
-import json
 import psycopg2
 
-# Define the API endpoint and key
-API_ENDPOINT = "https://monitoring-system-va17.onrender.com/api/disease_data"
-API_KEY = "rnd_cfn28WFvfPJhRZwtj5WrStCCP8D8"
+# Define your database connection details
+DB_CONFIG = {
+    'dbname': 'pest_db',
+    'user': 'pest_db_user',
+    'password': 'ic2ssRtlfJNayDEtbKkMhrvi6l4IyNJ8',
+    'host': 'dpg-cqjkj2mehbks73cd0r30-a.oregon-postgres.render.com',
+    'port': '5432'
+}
 
 @blueprint.route('/index')  
 @login_required
@@ -20,13 +23,7 @@ def index():
 def notifications():
     try:
         # Connect to the database
-        conn = psycopg2.connect(
-            dbname='pest_db',
-            user='pest_db_user',
-            password='ic2ssRtlfJNayDEtbKkMhrvi6l4IyNJ8',
-            host='dpg-cqjkj2mehbks73cd0r30-a.oregon-postgres.render.com',
-            port='5432'
-        )
+        conn = psycopg2.connect(**DB_CONFIG)
         cur = conn.cursor()
         
         # Fetch disease data from the database
