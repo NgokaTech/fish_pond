@@ -4,6 +4,7 @@ from flask_login import login_required
 from jinja2 import TemplateNotFound
 import requests
 import json
+import psycopg2
 
 # Define the API endpoint and key
 API_ENDPOINT = "https://monitoring-system-va17.onrender.com/api/disease_data"
@@ -17,29 +18,37 @@ def index():
 @blueprint.route('/notifications')
 @login_required
 def notifications():
-    headers = {
-        'Authorization': f'Bearer {API_KEY}',
-        'Content-Type': 'application/json'
-    }
-    
     try:
-        # Fetch disease data from the API
-        response = requests.get(API_ENDPOINT, headers=headers)
-        response.raise_for_status()  # Raise an exception for HTTP errors
-        disease_data = response.json()
+        # Connect to the database
+        conn = psycopg2.connect(
+            dbname='pest_db',
+            user='pest_db_user',
+            password='ic2ssRtlfJNayDEtbKkMhrvi6l4IyNJ8',
+            host='dpg-cqjkj2mehbks73cd0r30-a.oregon-postgres.render.com',
+            port='5432'
+        )
+        cur = conn.cursor()
+        
+        # Fetch disease data from the database
+        cur.execute("SELECT disease, recommendation, image_path FROM disease_data ORDER BY detection_date DESC")
+        rows = cur.fetchall()
+        
+        # Close connection
+        cur.close()
+        conn.close()
         
         # Create alerts list to pass to the template
         alerts = [
             {
-                'disease': entry['disease'],
-                'recommendation': entry['recommendation'],
-                'image_path': entry['image_path'],
+                'disease': row[0],
+                'recommendation': row[1],
+                'image_path': row[2],
                 'type': 'danger'
             }
-            for entry in disease_data
+            for row in rows
         ]
     
-    except requests.RequestException as e:
+    except Exception as e:
         print(f"Error fetching data: {e}")
         alerts = []
 
