@@ -1,156 +1,126 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notifications</title>
-    <style>
-        /* Add your styles here */
-        .notification-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-        .notification {
-            background: #f8f9fa;
-            border: 1px solid #dee2e6;
-            border-radius: 0.375rem;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            width: calc(33.333% - 1rem); /* 3 columns layout */
-            box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.1);
-        }
-        .notification img {
-            max-width: 100px;
-            display: none; /* Hide image by default */
-        }
-        .notification img.show {
-            display: block; /* Show image when clicked */
-        }
-        .pagination {
-            text-align: center;
-            margin-top: 1rem;
-        }
-        .pagination button {
-            margin: 0 0.25rem;
-            padding: 0.5rem 1rem;
-            border: 1px solid #dee2e6;
-            background: #f8f9fa;
-            border-radius: 0.375rem;
-        }
-        .image-link {
-            display: block;
-            margin-top: 0.5rem;
-            color: #007bff;
-            text-decoration: none;
-        }
-        .image-link:hover {
-            text-decoration: underline;
-        }
-    </style>
-</head>
-<body>
-    <div id="notifications-container" class="notification-container">
-        <!-- Notifications will be inserted here -->
+{% extends "layouts/base.html" %}
+
+{% block title %} Notifications Dashboard {% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-lg-12 mx-auto">
+            <div class="card mt-4 border-success">
+                <div class="card-header p-3 bg-success text-white">
+                    <h4 class="card-title">Notifications Dashboard</h4>
+                </div>
+                <div class="card-body">
+                    <div id="notifications-container" class="notification-container row">
+                        <!-- Notifications will be inserted here -->
+                    </div>
+                    <div class="d-flex justify-content-between mt-4">
+                        <button id="prev-page" class="btn btn-success" disabled>Previous</button>
+                        <span id="page-info">Page 1</span>
+                        <button id="next-page" class="btn btn-success">Next</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="pagination">
-        <button id="prev-page" disabled>Previous</button>
-        <span id="page-info">Page 1</span>
-        <button id="next-page">Next</button>
-    </div>
+</div>
 
-    <script>
-        const notificationsPerPage = 5;
-        let currentPage = 1;
-        let notifications = [];
+<script>
+    const notificationsPerPage = 10; // Show 10 items per page
+    let currentPage = 1;
+    let notifications = [];
 
-        // Function to fetch notifications and display them
-        function loadNotifications() {
-            fetch('/api/notifications')
-                .then(response => response.json())
-                .then(data => {
-                    notifications = data.alerts;
-                    notifications.reverse(); // Reverse notifications to show latest first
-                    renderNotifications();
-                })
-                .catch(error => {
-                    console.error('Error fetching notifications:', error);
-                });
-        }
-
-        // Function to render notifications for the current page
-        function renderNotifications() {
-            const container = document.getElementById('notifications-container');
-            const pageInfo = document.getElementById('page-info');
-            const prevButton = document.getElementById('prev-page');
-            const nextButton = document.getElementById('next-page');
-
-            container.innerHTML = ''; // Clear previous content
-
-            const startIndex = (currentPage - 1) * notificationsPerPage;
-            const endIndex = Math.min(startIndex + notificationsPerPage, notifications.length);
-            const pageNotifications = notifications.slice(startIndex, endIndex);
-
-            pageNotifications.forEach(alert => {
-                // Create notification element
-                const alertDiv = document.createElement('div');
-                alertDiv.className = 'notification';
-
-                // Add disease and recommendation
-                const disease = document.createElement('h3');
-                disease.innerText = alert.disease;
-                alertDiv.appendChild(disease);
-
-                const recommendation = document.createElement('p');
-                recommendation.innerText = alert.recommendation;
-                alertDiv.appendChild(recommendation);
-
-                // Add image if available
-                if (alert.image) {
-                    const img = document.createElement('img');
-                    img.src = `data:image/jpeg;base64,${alert.image}`;
-                    img.alt = alert.disease;
-                    img.className = 'notification-image';
-                    img.addEventListener('click', () => img.classList.toggle('show')); // Toggle image visibility
-                    
-                    // Add image link
-                    const link = document.createElement('a');
-                    link.href = `data:image/jpeg;base64,${alert.image}`;
-                    link.target = '_blank'; // Open in a new tab
-                    link.innerText = 'View Image';
-                    link.className = 'image-link';
-
-                    alertDiv.appendChild(img);
-                    alertDiv.appendChild(link);
+    // Function to fetch notifications and display them
+    function loadNotifications() {
+        fetch('/api/notifications')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
                 }
-
-                // Append to container
-                container.appendChild(alertDiv);
+                return response.json();
+            })
+            .then(data => {
+                notifications = data.alerts;
+                notifications.reverse(); // Reverse notifications to show latest first
+                renderNotifications();
+            })
+            .catch(error => {
+                console.error('Error fetching notifications:', error);
             });
+    }
 
-            // Update pagination buttons
-            prevButton.disabled = currentPage === 1;
-            nextButton.disabled = endIndex >= notifications.length;
-            pageInfo.innerText = `Page ${currentPage}`;
+    // Function to render notifications for the current page
+    function renderNotifications() {
+        const container = document.getElementById('notifications-container');
+        const pageInfo = document.getElementById('page-info');
+        const prevButton = document.getElementById('prev-page');
+        const nextButton = document.getElementById('next-page');
+
+        container.innerHTML = ''; // Clear previous content
+
+        const startIndex = (currentPage - 1) * notificationsPerPage;
+        const endIndex = Math.min(startIndex + notificationsPerPage, notifications.length);
+        const pageNotifications = notifications.slice(startIndex, endIndex);
+
+        pageNotifications.forEach(alert => {
+            // Create notification element
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'notification card mb-3 col-md-4 border-success';
+
+            // Create card body
+            const cardBody = document.createElement('div');
+            cardBody.className = 'card-body';
+
+            // Add pest sign and recommendation
+            const pestSign = document.createElement('h5');
+            pestSign.className = 'card-title text-success';
+            pestSign.innerText = alert.pest_sign;
+            cardBody.appendChild(pestSign);
+
+            const recommendation = document.createElement('p');
+            recommendation.className = 'card-text';
+            recommendation.innerText = alert.recommendation;
+            cardBody.appendChild(recommendation);
+
+            // Add image if available
+            if (alert.image) {
+                const img = document.createElement('img');
+                img.src = `data:image/jpeg;base64,${alert.image}`;
+                img.alt = alert.pest_sign;
+                img.className = 'card-img-top mb-2';
+
+                cardBody.insertBefore(img, cardBody.firstChild);
+            }
+
+            // Append card body to card
+            alertDiv.appendChild(cardBody);
+
+            // Append to container
+            container.appendChild(alertDiv);
+        });
+
+        // Update pagination buttons
+        prevButton.disabled = currentPage === 1;
+        nextButton.disabled = endIndex >= notifications.length;
+        pageInfo.innerText = `Page ${currentPage}`;
+    }
+
+    // Event listeners for pagination buttons
+    document.getElementById('prev-page').addEventListener('click', () => {
+        if (currentPage > 1) {
+            currentPage--;
+            renderNotifications();
         }
+    });
 
-        // Event listeners for pagination buttons
-        document.getElementById('prev-page').addEventListener('click', () => {
-            if (currentPage > 1) {
-                currentPage--;
-                renderNotifications();
-            }
-        });
+    document.getElementById('next-page').addEventListener('click', () => {
+        if (currentPage * notificationsPerPage < notifications.length) {
+            currentPage++;
+            renderNotifications();
+        }
+    });
 
-        document.getElementById('next-page').addEventListener('click', () => {
-            if (currentPage * notificationsPerPage < notifications.length) {
-                currentPage++;
-                renderNotifications();
-            }
-        });
-
-        // Load notifications on page load
-        window.onload = loadNotifications;
-    </script>
-</body>
-</html>
+    // Load notifications on page load
+    window.onload = loadNotifications;
+</script>
+{% endblock content %}
