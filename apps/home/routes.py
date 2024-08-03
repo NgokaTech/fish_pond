@@ -4,12 +4,6 @@ import psycopg2
 import base64
 import logging
 
-from flask import Blueprint, render_template, jsonify
-from flask_login import login_required
-import psycopg2
-import base64
-import logging
-
 # Initialize Blueprint
 blueprint = Blueprint('blueprint', __name__, template_folder='templates')
 
@@ -40,7 +34,7 @@ def get_notifications():
         cur = conn.cursor()
 
         # Query to fetch data
-        cur.execute("SELECT pest_sign, recommendation, image FROM pest_data ORDER BY detection_date DESC")
+        cur.execute("SELECT pest_sign, recommendation, image, detection_date FROM pest_data ORDER BY detection_date DESC")
         rows = cur.fetchall()
 
         # Close the connection
@@ -52,7 +46,8 @@ def get_notifications():
             {
                 'pest_sign': row[0],
                 'recommendation': row[1],
-                'image': base64.b64encode(row[2]).decode('utf-8') if row[2] else None
+                'image': base64.b64encode(row[2]).decode('utf-8') if row[2] else None,
+                'detection_date': row[3].isoformat()
             }
             for row in rows
         ]
@@ -76,7 +71,7 @@ def login():
         user = user.authenticate(username, password)  # Replace with your user authentication logic
         if user:
             login_user(user)
-            return redirect(url_for('blueprint.notifications'))
+            return redirect(url_for('blueprint.index'))
         else:
             flash('Invalid username or password', 'danger')
     return render_template('login.html')

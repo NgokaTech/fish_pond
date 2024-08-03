@@ -34,7 +34,7 @@
               </div>
               <div class="text-end pt-1">
                 <p class="text-sm mb-0 text-capitalize">Today's Pests Detected</p>
-                <h4 class="mb-0">2,300</h4>
+                <h4 class="mb-0" id="pests-detected">13</h4>
               </div>
             </div>
             <hr class="dark horizontal my-0">
@@ -50,8 +50,8 @@
                 <i class="material-icons opacity-10">new_releases</i>
               </div>
               <div class="text-end pt-1">
-                <p class="text-sm mb-0 text-capitalize">New Diseases</p>
-                <h4 class="mb-0">34</h4>
+                <p class="text-sm mb-0 text-capitalize">New Pest Infections</p>
+                <h4 class="mb-0">13</h4>
               </div>
             </div>
             <hr class="dark horizontal my-0">
@@ -68,7 +68,7 @@
               </div>
               <div class="text-end pt-1">
                 <p class="text-sm mb-0 text-capitalize">Recovered Plants</p>
-                <h4 class="mb-0">103</h4>
+                <h4 class="mb-0"></h4>
               </div>
             </div>
             <hr class="dark horizontal my-0">
@@ -90,11 +90,11 @@
             </div>
             <div class="card-body">
               <h6 class="mb-0 ">Holes Identified Over Time</h6>
-              <p class="text-sm ">Last Campaign Performance</p>
+              <p class="text-sm ">Monitoring Maize Crops</p>
               <hr class="dark horizontal">
               <div class="d-flex ">
                 <i class="material-icons text-sm my-auto me-1">schedule</i>
-                <p class="mb-0 text-sm"> campaign sent 2 days ago </p>
+                <p class="mb-0 text-sm"> updated 2 days ago </p>
               </div>
             </div>
           </div>
@@ -110,11 +110,11 @@
             </div>
             <div class="card-body">
               <h6 class="mb-0 "> Daily Pests Detected </h6>
-              <p class="text-sm "> (<span class="font-weight-bolder">+15%</span>) increase in today's detections. </p>
+              <p class="text-sm "> (<span class="font-weight-bolder">+4%</span>) increase in today's detections. </p>
               <hr class="dark horizontal">
               <div class="d-flex ">
                 <i class="material-icons text-sm my-auto me-1">schedule</i>
-                <p class="mb-0 text-sm"> updated 4 min ago </p>
+                <p class="mb-0 text-sm"> updated few mins ago </p>
               </div>
             </div>
           </div>
@@ -130,7 +130,7 @@
             </div>
             <div class="card-body">
               <h6 class="mb-0 ">Completed Tasks</h6>
-              <p class="text-sm ">Last Campaign Performance</p>
+              <p class="text-sm ">Monitoring Maize Crops</p>
               <hr class="dark horizontal">
               <div class="d-flex ">
                 <i class="material-icons text-sm my-auto me-1">schedule</i>
@@ -161,7 +161,7 @@
     new Chart(ctx, {
       type: "bar",
       data: {
-        labels: ["M", "T", "W", "T", "F", "S", "S"],
+        labels: ["Jul", "Aug"],
         datasets: [{
           label: "Holes",
           tension: 0.4,
@@ -169,7 +169,7 @@
           borderRadius: 4,
           borderSkipped: false,
           backgroundColor: "rgba(255, 255, 255, .8)",
-          data: [50, 20, 10, 22, 50, 10, 40],
+          data: [40, 60],
           maxBarThickness: 6
         }],
       },
@@ -241,7 +241,7 @@
     new Chart(ctx2, {
       type: "line",
       data: {
-        labels: ["Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+        labels: ["Jul", "Aug"],
         datasets: [{
           label: "Pests",
           tension: 0,
@@ -253,7 +253,7 @@
           borderWidth: 4,
           backgroundColor: "transparent",
           fill: true,
-          data: [50, 40, 300, 320, 500, 350, 200, 230, 500],
+          data: [200, 300],
           maxBarThickness: 6
         }],
       },
@@ -322,7 +322,7 @@
     new Chart(ctx3, {
       type: "line",
       data: {
-        labels: ["Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+        labels: ["Jul", "Aug"],
         datasets: [{
           label: "Tasks",
           tension: 0,
@@ -334,7 +334,7 @@
           borderWidth: 4,
           backgroundColor: "transparent",
           fill: true,
-          data: [50, 40, 300, 220, 500, 250, 400, 230, 500],
+          data: [30, 50],
           maxBarThickness: 6
         }],
       },
@@ -397,6 +397,18 @@
         },
       },
     });
+
+    // Function to update the pests detected number
+    function updatePestsDetected() {
+      const pestsDetectedElement = document.getElementById('pests-detected');
+      let currentCount = parseInt(pestsDetectedElement.innerText.replace(/,/g, ''));
+      currentCount += Math.floor(Math.random() * 10) + 1; // Increase by a random number between 1 and 10
+      pestsDetectedElement.innerText = currentCount.toLocaleString();
+    }
+
+    // Update the pests detected number every 3 minutes (180000 milliseconds)
+    setInterval(updatePestsDetected, 180000);
+
   </script>
 
 {% endblock javascripts %}

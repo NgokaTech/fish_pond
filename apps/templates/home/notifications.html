@@ -7,17 +7,13 @@
     <div class="row">
         <div class="col-lg-12 mx-auto">
             <div class="card mt-4 border-success">
-                <div class="card-header p-3 bg-success text-white">
-                    <h4 class="card-title">Notifications Dashboard</h4>
+                <div class="card-header p-3 bg-success text-white d-flex justify-content-between align-items-center">
+                    <h4 class="card-title">Notifications</h4>
+                   
                 </div>
                 <div class="card-body">
                     <div id="notifications-container" class="notification-container row">
                         <!-- Notifications will be inserted here -->
-                    </div>
-                    <div class="d-flex justify-content-between mt-4">
-                        <button id="prev-page" class="btn btn-success" disabled>Previous</button>
-                        <span id="page-info">Page 1</span>
-                        <button id="next-page" class="btn btn-success">Next</button>
                     </div>
                 </div>
             </div>
@@ -25,102 +21,114 @@
     </div>
 </div>
 
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f5f5f5;
+        color: #333;
+    }
+    .notification {
+        background-color: #e6f2e6;
+        border: 1px solid #b3d1b3;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 5px;
+        position: relative;
+        z-index: 1;
+    }
+    .notification img {
+        width: 100%;
+        height: auto;
+        cursor: pointer;
+    }
+    .notification.new::before {
+        content: "NEW";
+        color: white;
+        background-color: green;
+        font-weight: bold;
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        padding: 5px 10px;
+        border-radius: 5px;
+        z-index: 2;
+    }
+    .full-screen {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        align-items: center;
+        justify-content: center;
+    }
+    .full-screen img {
+        max-width: 90%;
+        max-height: 90%;
+    }
+</style>
+
 <script>
-    const notificationsPerPage = 10; // Show 10 items per page
-    let currentPage = 1;
-    let notifications = [];
-
-    // Function to fetch notifications and display them
-    function loadNotifications() {
+    document.addEventListener('DOMContentLoaded', function() {
         fetch('/api/notifications')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
-                notifications = data.alerts;
-                notifications.reverse(); // Reverse notifications to show latest first
-                renderNotifications();
+                const notifications = data.alerts;
+                const notificationsContainer = document.getElementById('notifications-container');
+                notifications.forEach((notification, index) => {
+                    const notificationDiv = document.createElement('div');
+                    notificationDiv.classList.add('notification', 'card', 'mb-3', 'col-md-4', 'border-success');
+                    if (index < 5) {
+                        notificationDiv.classList.add('new');
+                    }
+
+                    const cardBody = document.createElement('div');
+                    cardBody.classList.add('card-body');
+
+                    const pestSign = document.createElement('h5');
+                    pestSign.className = 'card-title text-success';
+                    pestSign.innerText = notification.pest_sign;
+                    cardBody.appendChild(pestSign);
+
+                    const recommendation = document.createElement('p');
+                    recommendation.className = 'card-text';
+                    recommendation.innerText = notification.recommendation;
+                    cardBody.appendChild(recommendation);
+
+                    const timestamp = document.createElement('p');
+                    timestamp.className = 'card-text text-muted';
+                    timestamp.innerText = `Detected on: ${new Date(notification.detection_date).toLocaleString()}`;
+                    cardBody.appendChild(timestamp);
+
+                    if (notification.image) {
+                        const img = document.createElement('img');
+                        img.src = `data:image/jpeg;base64,${notification.image}`;
+                        img.alt = notification.pest_sign;
+                        img.className = 'card-img-top mb-2';
+                        cardBody.insertBefore(img, cardBody.firstChild);
+                    }
+
+                    notificationDiv.appendChild(cardBody);
+                    notificationsContainer.appendChild(notificationDiv);
+                });
             })
-            .catch(error => {
-                console.error('Error fetching notifications:', error);
-            });
-    }
+            .catch(error => console.error('Error fetching notifications:', error));
+    });
 
-    // Function to render notifications for the current page
-    function renderNotifications() {
-        const container = document.getElementById('notifications-container');
-        const pageInfo = document.getElementById('page-info');
-        const prevButton = document.getElementById('prev-page');
-        const nextButton = document.getElementById('next-page');
-
-        container.innerHTML = ''; // Clear previous content
-
-        const startIndex = (currentPage - 1) * notificationsPerPage;
-        const endIndex = Math.min(startIndex + notificationsPerPage, notifications.length);
-        const pageNotifications = notifications.slice(startIndex, endIndex);
-
-        pageNotifications.forEach(alert => {
-            // Create notification element
-            const alertDiv = document.createElement('div');
-            alertDiv.className = 'notification card mb-3 col-md-4 border-success';
-
-            // Create card body
-            const cardBody = document.createElement('div');
-            cardBody.className = 'card-body';
-
-            // Add pest sign and recommendation
-            const pestSign = document.createElement('h5');
-            pestSign.className = 'card-title text-success';
-            pestSign.innerText = alert.pest_sign;
-            cardBody.appendChild(pestSign);
-
-            const recommendation = document.createElement('p');
-            recommendation.className = 'card-text';
-            recommendation.innerText = alert.recommendation;
-            cardBody.appendChild(recommendation);
-
-            // Add image if available
-            if (alert.image) {
-                const img = document.createElement('img');
-                img.src = `data:image/jpeg;base64,${alert.image}`;
-                img.alt = alert.pest_sign;
-                img.className = 'card-img-top mb-2';
-
-                cardBody.insertBefore(img, cardBody.firstChild);
-            }
-
-            // Append card body to card
-            alertDiv.appendChild(cardBody);
-
-            // Append to container
-            container.appendChild(alertDiv);
+    function showFullScreenImage(imgElement) {
+        const fullScreenDiv = document.getElementById('fullScreen');
+        const fullScreenImg = document.getElementById('fullScreenImg');
+        fullScreenImg.src = imgElement.src;
+        fullScreenDiv.style.display = 'flex';
+        fullScreenDiv.addEventListener('click', function() {
+            fullScreenDiv.style.display = 'none';
         });
-
-        // Update pagination buttons
-        prevButton.disabled = currentPage === 1;
-        nextButton.disabled = endIndex >= notifications.length;
-        pageInfo.innerText = `Page ${currentPage}`;
     }
-
-    // Event listeners for pagination buttons
-    document.getElementById('prev-page').addEventListener('click', () => {
-        if (currentPage > 1) {
-            currentPage--;
-            renderNotifications();
-        }
-    });
-
-    document.getElementById('next-page').addEventListener('click', () => {
-        if (currentPage * notificationsPerPage < notifications.length) {
-            currentPage++;
-            renderNotifications();
-        }
-    });
-
-    // Load notifications on page load
-    window.onload = loadNotifications;
 </script>
-{% endblock content %}
+<div class="full-screen" id="fullScreen">
+    <img id="fullScreenImg" src="" alt="Full Screen Image">
+</div>
+{% endblock content %}+
