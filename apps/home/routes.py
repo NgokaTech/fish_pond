@@ -33,21 +33,22 @@ def get_notifications():
         conn = psycopg2.connect(**DB_PARAMS)
         cur = conn.cursor()
 
-        # Query to fetch data
-        cur.execute("SELECT pest_sign, recommendation, image, detection_date FROM pest_data ORDER BY detection_date DESC")
+        # Query to fetch rail inspection data
+        cur.execute("SELECT defect_type, description, encode(image, 'base64') as image, geo_location, detection_date FROM rail_inspection_data ORDER BY detection_date DESC")
         rows = cur.fetchall()
 
         # Close the connection
         cur.close()
         conn.close()
 
-        # Process the data into JSON format
+        # Process the rail inspection data into JSON format
         alerts = [
             {
-                'pest_sign': row[0],
-                'recommendation': row[1],
-                'image': base64.b64encode(row[2]).decode('utf-8') if row[2] else None,
-                'detection_date': row[3].isoformat()
+                'defect_type': row[0],
+                'description': row[1],
+                'image': row[2],
+                'geo_location': row[3],
+                'detection_date': row[4].isoformat()
             }
             for row in rows
         ]
@@ -61,6 +62,30 @@ def get_notifications():
     except Exception as e:
         logging.error(f"Error fetching data: {e}")
         return jsonify(alerts=[]), 500  # Return an empty list and a 500 status code in case of error
+
+# Route for data insertion from Raspberry Pi
+@blueprint.route('/api/upload', methods=['POST'])
+def upload_data():
+    try:
+        defect_type = request.form['defect_type']
+        description = request.form['description']
+        geo_location = request.form['geo_location']
+        image_data = request.files['image'].read()
+
+        conn = psycopg2.connect(**DB_PARAMS)
+        cur = conn.cursor()
+        cur.execute(
+            "INSERT INTO rail_inspection_data (defect_type, description, image, geo_location) VALUES (%s, %s, %s, %s)",
+            (defect_type, description, psycopg2.Binary(image_data), geo_location)
+        )
+        conn.commit()
+        cur.close()
+        conn.close()
+
+        return jsonify({'status': 'success'}), 200
+    except Exception as e:
+        logging.error(f"Error uploading data: {e}")
+        return jsonify({'status': 'error', 'message': str(e)}), 500
 
 # Route for login page
 @blueprint.route('/login', methods=['GET', 'POST'])

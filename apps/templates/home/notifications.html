@@ -6,10 +6,9 @@
 <div class="container-fluid py-4">
     <div class="row">
         <div class="col-lg-12 mx-auto">
-            <div class="card mt-4 border-success">
-                <div class="card-header p-3 bg-success text-white d-flex justify-content-between align-items-center">
-                    <h4 class="card-title">Notifications</h4>
-                   
+            <div class="card mt-4 border-warning">
+                <div class="card-header p-3 bg-warning text-dark d-flex justify-content-between align-items-center">
+                    <h4 class="card-title">Railway Inspection Notifications</h4>
                 </div>
                 <div class="card-body">
                     <div id="notifications-container" class="notification-container row">
@@ -24,17 +23,18 @@
 <style>
     body {
         font-family: Arial, sans-serif;
-        background-color: #f5f5f5;
-        color: #333;
+        background-color: #2c3e50;
+        color: #ecf0f1;
     }
     .notification {
-        background-color: #e6f2e6;
-        border: 1px solid #b3d1b3;
+        background-color: #34495e;
+        border: 1px solid #f39c12;
         padding: 20px;
         margin-bottom: 20px;
         border-radius: 5px;
         position: relative;
         z-index: 1;
+        color: #ecf0f1;
     }
     .notification img {
         width: 100%;
@@ -44,7 +44,7 @@
     .notification.new::before {
         content: "NEW";
         color: white;
-        background-color: green;
+        background-color: #f1c40f;
         font-weight: bold;
         position: absolute;
         top: 10px;
@@ -69,6 +69,9 @@
         max-width: 90%;
         max-height: 90%;
     }
+    .card-header {
+        background-color: #f39c12;
+    }
 </style>
 
 <script>
@@ -80,7 +83,7 @@
                 const notificationsContainer = document.getElementById('notifications-container');
                 notifications.forEach((notification, index) => {
                     const notificationDiv = document.createElement('div');
-                    notificationDiv.classList.add('notification', 'card', 'mb-3', 'col-md-4', 'border-success');
+                    notificationDiv.classList.add('notification', 'card', 'mb-3', 'col-md-4', 'border-warning');
                     if (index < 5) {
                         notificationDiv.classList.add('new');
                     }
@@ -88,15 +91,20 @@
                     const cardBody = document.createElement('div');
                     cardBody.classList.add('card-body');
 
-                    const pestSign = document.createElement('h5');
-                    pestSign.className = 'card-title text-success';
-                    pestSign.innerText = notification.pest_sign;
-                    cardBody.appendChild(pestSign);
+                    const defectType = document.createElement('h5');
+                    defectType.className = 'card-title text-warning';
+                    defectType.innerText = notification.defect_type;
+                    cardBody.appendChild(defectType);
 
-                    const recommendation = document.createElement('p');
-                    recommendation.className = 'card-text';
-                    recommendation.innerText = notification.recommendation;
-                    cardBody.appendChild(recommendation);
+                    const description = document.createElement('p');
+                    description.className = 'card-text';
+                    description.innerText = notification.description;
+                    cardBody.appendChild(description);
+
+                    const geoLocation = document.createElement('p');
+                    geoLocation.className = 'card-text';
+                    geoLocation.innerText = `Geo Location: ${notification.geo_location}`;
+                    cardBody.appendChild(geoLocation);
 
                     const timestamp = document.createElement('p');
                     timestamp.className = 'card-text text-muted';
@@ -106,9 +114,10 @@
                     if (notification.image) {
                         const img = document.createElement('img');
                         img.src = `data:image/jpeg;base64,${notification.image}`;
-                        img.alt = notification.pest_sign;
+                        img.alt = notification.defect_type;
                         img.className = 'card-img-top mb-2';
                         cardBody.insertBefore(img, cardBody.firstChild);
+                        img.addEventListener('click', () => showFullScreenImage(img));
                     }
 
                     notificationDiv.appendChild(cardBody);
@@ -131,4 +140,4 @@
 <div class="full-screen" id="fullScreen">
     <img id="fullScreenImg" src="" alt="Full Screen Image">
 </div>
-{% endblock content %}+
+{% endblock content %}
