@@ -3,6 +3,8 @@ from flask_login import login_required, login_user, logout_user, current_user
 import psycopg2
 import base64
 import logging
+from flask import render_template
+from jinja2 import TemplateNotFound
 
 # Initialize Blueprint
 blueprint = Blueprint('blueprint', __name__, template_folder='templates')

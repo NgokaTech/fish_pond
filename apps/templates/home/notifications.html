@@ -1,3 +1,4 @@
+
 {% extends "layouts/base.html" %}
 
 {% block title %} Notifications Dashboard {% endblock %}
@@ -58,7 +59,10 @@
         position: fixed;
         z-index: 1000;
         top: 0;
-        left: 0;
+        left: 0;TemplateNotFound
+jinja2.exceptions.TemplateNotFound: home/page-404.html
+
+
         width: 100%;
         height: 100%;
         background-color: rgba(0, 0, 0, 0.8);
@@ -96,15 +100,10 @@
                     defectType.innerText = notification.defect_type;
                     cardBody.appendChild(defectType);
 
-                    const description = document.createElement('p');
-                    description.className = 'card-text';
-                    description.innerText = notification.description;
-                    cardBody.appendChild(description);
+                    const description = document.createElementTemplateNotFound
+jinja2.exceptions.TemplateNotFound: home/page-404.html
 
-                    const geoLocation = document.createElement('p');
-                    geoLocation.className = 'card-text';
-                    geoLocation.innerText = `Geo Location: ${notification.geo_location}`;
-                    cardBody.appendChild(geoLocation);
+
 
                     const timestamp = document.createElement('p');
                     timestamp.className = 'card-text text-muted';

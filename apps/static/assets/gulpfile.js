@@ -1,7 +1,7 @@
 /*
 
 =========================================================
-* Dickson & Fredy - Simple SCSS compiler via Gulp
+* d_j - Simple SCSS compiler via Gulp
 =========================================================
 
 */

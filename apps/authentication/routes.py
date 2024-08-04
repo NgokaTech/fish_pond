@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 """
-Copyright (c) 2024 - present Dickson & Fredy.us
+Copyright (c) 2024 - present d_j.us
 """
 
 from flask import render_template, redirect, request, url_for
