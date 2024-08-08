@@ -1,0 +1,110 @@
+/* styles.css */
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f8f9fa;
+}
+
+.page-header {
+    background-image: url('/static/assets/img/bg-pricing.jpg');
+    background-size: cover;
+    background-position: center;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.mask {
+    background-color: rgba(0, 0, 0, 0.6);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+
+.container {
+    z-index: 2;
+    position: relative;
+}
+
+.card {
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    background-color: #1e90ff;
+    color: #fff;
+    padding: 20px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    text-align: center;
+}
+
+.card-body {
+    padding: 30px;
+}
+
+.input-group-outline {
+    border: 1px solid #dcdcdc;
+    border-radius: 4px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+}
+
+.input-group-outline input {
+    border: none;
+    box-shadow: none;
+}
+
+.btn.custom-blue {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+    width: 100%;
+}
+
+.btn.custom-blue:hover {
+    background-color: #0056b3;
+}
+
+.form-check-input {
+    background-color: #1e90ff;
+    border-color: #1e90ff;
+}
+
+.form-check-input:checked {
+    background-color: #0c7bff;
+    border-color: #0c7bff;
+}
+
+.text-primary {
+    color: #1e90ff !important;
+}
+
+.text-primary:hover {
+    color: #0c7bff !important;
+}
+
+.alert {
+    margin-top: 15px;
+    border-radius: 4px;
+}
+
+
+/* styles.css */
+
+.text-primary {
+    color: #007bff !important; /* Replace with your preferred blue shade */
+}
+
+.text-primary:hover {
+    color: #0056b3 !important; /* Darker blue on hover */
+}

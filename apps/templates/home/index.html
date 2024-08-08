@@ -1,36 +1,53 @@
 {% extends "layouts/base.html" %}
 
-{% block title %} Dashboard {% endblock %} 
+{% block title %}Dashboard{% endblock %}
 
 {% block stylesheets %}
 <style>
     body {
         font-family: 'Roboto', sans-serif;
-        background-color: #2c3e50;
+        background-color: #1e3d59; /* Deep blue background */
         color: #ecf0f1;
     }
     .container {
         padding-top: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start; /* Align the content near the top */
+        min-height: 100vh;
     }
     .card {
-        background-color: #34495e;
-        border: 1px solid #f39c12;
-        margin-bottom: 20px;
-        padding: 20px;
+        background-color: #3a506b; /* Bluish card background */
+        border: 1px solid #1e90ff; /* Lighter blue border */
+        padding: 40px;
         text-align: center;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Slight shadow for depth */
+        max-width: 500px;
+        margin-top: 20px; /* Add some margin at the top */
     }
     .card h4 {
-        color: #f39c12;
-        margin-bottom: 10px;
+        color: #1e90ff; /* Lighter blue text color */
+        margin-bottom: 20px;
+        font-size: 24px;
+    }
+    .card p {
+        margin-bottom: 30px;
+        font-size: 18px;
     }
     .link {
-        display: block;
-        margin-top: 20px;
-        color: #f39c12;
+        display: inline-block;
+        padding: 15px 30px;
+        background-color: #1e90ff; /* Bright blue button background */
+        color: #fff; /* White text color */
         text-decoration: none;
+        font-weight: bold;
+        font-size: 20px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
     }
     .link:hover {
-        text-decoration: underline;
+        background-color: #0c7bff; /* Darker blue on hover */
     }
 </style>
 {% endblock stylesheets %}
@@ -39,8 +56,8 @@
 <div class="container">
     <div class="card">
         <h4>Dashboard</h4>
-        <p>Welcome to your dashboard. Here you can find various insights about railway crack checking .</p>
-        <a href="notifications.html" class="link">Go to Notifications</a>
+        <p>Welcome to your Automated Fish Pond Monitoring System.</p>
+        <a href="notifications.html" class="link">GO TO NOTIFICATIONS</a>
     </div>
 </div>
 {% endblock content %}

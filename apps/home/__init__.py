@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 """
-Copyright (c) 2024 - present d_j.us
+Copyright (c) 2024 - present ENG.Baraka.us
 """
 
 from flask import Blueprint

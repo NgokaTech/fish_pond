@@ -1,7 +1,7 @@
 version: '3.8'
 services:
-  d_j-app:
-    container_name: d_j_app
+  ENG.Baraka-app:
+    container_name: ENG.Baraka_app
     restart: always
     env_file: .env
     build: .
@@ -19,7 +19,7 @@ services:
     networks:
       - web_network
     depends_on: 
-      - d_j-app
+      - ENG.Baraka-app
 networks:
   db_network:
     driver: bridge

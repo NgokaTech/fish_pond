@@ -33,22 +33,21 @@ def get_notifications():
     conn = psycopg2.connect(**DB_PARAMS)
     cur = conn.cursor()
 
-    # Query to fetch rail inspection data
-    cur.execute("SELECT defect_type, description, encode(image, 'base64') as image, geo_location, detection_date FROM rail_inspection_data ORDER BY detection_date DESC")
+    # Query to fetch fish pond monitoring data
+    cur.execute("SELECT object_count, ph_value, encode(image, 'base64') as image, timestamp FROM fish_pond_data ORDER BY timestamp DESC")
     rows = cur.fetchall()
 
     # Close the connection
     cur.close()
     conn.close()
 
-    # Process the rail inspection data into JSON format
+    # Process the fish pond monitoring data into JSON format
     alerts = [
         {
-            'defect_type': row[0],
-            'description': row[1],
+            'object_count': row[0],
+            'ph_value': row[1],
             'image': row[2],
-            'geo_location': row[3],
-            'detection_date': row[4].isoformat()
+            'timestamp': row[3].isoformat()
         }
         for row in rows
     ]
@@ -62,16 +61,15 @@ def get_notifications():
 # Route for data insertion from Raspberry Pi
 @blueprint.route('/api/upload', methods=['POST'])
 def upload_data():
-    defect_type = request.form['defect_type']
-    description = request.form['description']
-    geo_location = request.form['geo_location']
+    object_count = request.form['object_count']
+    ph_value = request.form['ph_value']
     image_data = request.files['image'].read()
 
     conn = psycopg2.connect(**DB_PARAMS)
     cur = conn.cursor()
     cur.execute(
-        "INSERT INTO rail_inspection_data (defect_type, description, image, geo_location) VALUES (%s, %s, %s, %s)",
-        (defect_type, description, psycopg2.Binary(image_data), geo_location)
+        "INSERT INTO fish_pond_data (object_count, ph_value, image) VALUES (%s, %s, %s)",
+        (object_count, ph_value, psycopg2.Binary(image_data))
     )
     conn.commit()
     cur.close()
