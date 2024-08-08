@@ -8,7 +8,7 @@
             "type": "msedge",
             "request": "launch",
             "name": "Open login.html",
-            "file": "/home/e2421y/Railway_monitoring/apps/templates/accounts/login.html"
+            "file": "/home/e2421y/fish_pond/apps/templates/accounts/login.html"
         }
     ]
 }
