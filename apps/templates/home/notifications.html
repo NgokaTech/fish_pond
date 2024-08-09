@@ -2,7 +2,6 @@
 
 {% block title %} Fish Pond Notifications Dashboard {% endblock %}
 
-
 {% block stylesheets %}
 <style>
     body {
@@ -37,7 +36,6 @@
         border: 1px solid #1e90ff;
         margin-bottom: 20px;
         padding: 20px;
-        position: relative;
     }
     .notification {
         background-color: #3a506b;
@@ -54,8 +52,6 @@
     .notification-content {
         flex: 1;
         text-align: center;
-        position: relative;
-        z-index: 1; /* Ensure the content is above the "Incoming Info" label */
     }
     .notification img {
         width: 150px;
@@ -70,11 +66,10 @@
         background-color: #00bfff;
         font-weight: bold;
         position: absolute;
-        top: -15px; /* Adjust to place the label above the content */
+        top: -15px;
         left: 10px;
         padding: 5px 10px;
         border-radius: 5px;
-        z-index: 2; /* Ensure the label is above the content */
     }
     .full-screen {
         display: none;
@@ -94,8 +89,6 @@
     }
 </style>
 {% endblock stylesheets %}
-
-
 
 {% block content %}
 <div class="sidebar">
@@ -135,12 +128,12 @@
 
                     const title = document.createElement('h5');
                     title.className = 'card-title text-warning';
-                    title.innerText = `Fish Count: ${notification.fish_count} | pH: ${notification.ph_value}`;
+                    title.innerText = `Detected Fish: ${notification.object_count} | pH: ${notification.ph_value}`;
                     notificationContent.appendChild(title);
 
                     const description = document.createElement('p');
                     description.className = 'card-text';
-                    description.innerText = `Food Consumed: ${notification.fish_count * 0.5} grams`; // Example calculation of food consumed
+                    description.innerText = `grams per fish: ${notification.object_count}`;
                     notificationContent.appendChild(description);
 
                     const phRecommendation = document.createElement('p');
@@ -160,7 +153,7 @@
                     if (notification.image) {
                         const img = document.createElement('img');
                         img.src = `data:image/jpeg;base64,${notification.image}`;
-                        img.alt = `Fish Count: ${notification.fish_count}`;
+                        img.alt = `Object Count: ${notification.object_count}`;
                         img.addEventListener('click', () => showFullScreenImage(img));
                         notificationDiv.appendChild(notificationContent);
                         notificationDiv.appendChild(img);
