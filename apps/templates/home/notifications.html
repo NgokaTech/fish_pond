@@ -2,6 +2,7 @@
 
 {% block title %} Fish Pond Notifications Dashboard {% endblock %}
 
+
 {% block stylesheets %}
 <style>
     body {
@@ -36,6 +37,7 @@
         border: 1px solid #1e90ff;
         margin-bottom: 20px;
         padding: 20px;
+        position: relative;
     }
     .notification {
         background-color: #3a506b;
@@ -52,6 +54,8 @@
     .notification-content {
         flex: 1;
         text-align: center;
+        position: relative;
+        z-index: 1; /* Ensure the content is above the "Incoming Info" label */
     }
     .notification img {
         width: 150px;
@@ -66,10 +70,11 @@
         background-color: #00bfff;
         font-weight: bold;
         position: absolute;
-        top: 10px;
+        top: -15px; /* Adjust to place the label above the content */
         left: 10px;
         padding: 5px 10px;
         border-radius: 5px;
+        z-index: 2; /* Ensure the label is above the content */
     }
     .full-screen {
         display: none;
@@ -89,6 +94,8 @@
     }
 </style>
 {% endblock stylesheets %}
+
+
 
 {% block content %}
 <div class="sidebar">
